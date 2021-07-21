@@ -1,0 +1,7 @@
+{
+  "name": "OpenWetherMap",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
