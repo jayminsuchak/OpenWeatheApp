@@ -15,7 +15,7 @@ import { speedometer, cloud, cloudOutline, waterSharp, paperPlane, thermometerOu
 
 import moment from 'moment';
 
-import './GetWeathContainer.css';
+import './GetWeatheContainer.css';
 import { getNested, isWifiConnected, scheduleNotification } from '../utillity/Utils';
 import ApiService from '../api/GetWeather';
 
@@ -25,7 +25,7 @@ interface LocationError {
 }
 export const SELECTED_DATE_FORMAT = 'MMM DD, YYYY h:mm A';
 
-const ExploreContainer: React.FC = () => {
+const GetWeatherContainer: React.FC = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<LocationError>({ showError: false });
@@ -99,7 +99,7 @@ const ExploreContainer: React.FC = () => {
   }
 
   /**
-     * This function is responsible add the observable if notification is recevied.
+     * This function is responsible add the observable if notification is recevied
   */
   const addNotificationListner = async () => {
     SynchPlugin.addListener('localNotificationReceived', () => {
@@ -117,7 +117,6 @@ const ExploreContainer: React.FC = () => {
    * This function is responsible for fetching the data from the API.
    */
   const getWeatherInfo = async () => {
-    // setLoading(true);
     if (city !== '') {
       ApiService.get('/weather', {
         params: {
@@ -133,7 +132,6 @@ const ExploreContainer: React.FC = () => {
           scheduleNotification();
           addNotificationListner();
         } else {
-          // setLoading(false);
           setError(res.data);
         }
 
@@ -274,4 +272,4 @@ const ExploreContainer: React.FC = () => {
   );
 };
 
-export default ExploreContainer;
+export default GetWeatherContainer;

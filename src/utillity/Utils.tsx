@@ -41,9 +41,10 @@ export const scheduleNotification = async () => {
                 title: 'Fetching Weather...',
                 body: 'Fetching Weather...',
                 schedule: {
-                    at: new Date(Date.now() + 1000 * 60), // in a minute
+                    at: new Date(Date.now() + 1000 * 60 * 60 * 2), // in two hour
+                    allowWhileIdle: true,
                     repeats: true,
-                    every: "minute"
+                    every: "hour"
                 }
             }
         ]

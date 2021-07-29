@@ -24,13 +24,7 @@ import GetWeatherContainer from './components/GetWeatherContainer';
 
 const App: React.FC = () => (
   <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/home">
-          <GetWeatherContainer />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
+    <GetWeatherContainer />
   </IonApp>
 );
 
