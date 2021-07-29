@@ -15,7 +15,7 @@ import { speedometer, cloud, cloudOutline, waterSharp, paperPlane, thermometerOu
 
 import moment from 'moment';
 
-import './ExploreContainer.css';
+import './GetWeathContainer.css';
 import { getNested, isWifiConnected, scheduleNotification } from '../utillity/Utils';
 import ApiService from '../api/GetWeather';
 
