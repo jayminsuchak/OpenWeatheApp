@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "OpenWetherMap",
+	"webDir": "build",
+	"bundledWebRuntime": false
+}
