@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 
 import { SynchPlugin } from 'synch-plugin';
+
 import {
   NativeGeocoder,
   NativeGeocoderResult,
   NativeGeocoderOptions
 } from '@ionic-native/native-geocoder';
+
 import {
   IonContent, IonHeader, IonPage,
-  IonTitle, IonToolbar, IonCard, IonCardSubtitle, IonCardTitle, IonCardContent,
-  IonItem, IonIcon, IonLabel, IonLoading, IonToast
+  IonTitle, IonToolbar, IonCard, IonCardSubtitle, IonCardContent, IonLoading, IonToast
 } from '@ionic/react';
+
+import { ItemIconTitle } from './widgets/ItemIconTitle';
+import { ItemTitle } from './widgets/ItemTitle';
+import { getNested, isWifiConnected, scheduleNotification } from '../utillity/Utils';
+import { ConstantStrings } from '../utillity/Constant';
+
 import { speedometer, cloud, cloudOutline, waterSharp, paperPlane, thermometerOutline } from 'ionicons/icons';
 
 import moment from 'moment';
 
-import './GetWeatheContainer.css';
-import { getNested, isWifiConnected, scheduleNotification } from '../utillity/Utils';
+import './GetWeatherContainer.css';
 import ApiService from '../api/GetWeather';
+
 
 interface LocationError {
   showError: boolean;
@@ -38,7 +45,7 @@ const GetWeatherContainer: React.FC = () => {
   */
   const saveWeather = async (weatherResponse: string) => {
     await SynchPlugin.set({
-      key: 'Weather',
+      key: ConstantStrings.STR_WEATHER,
       value: weatherResponse,
     });
   };
@@ -47,7 +54,7 @@ const GetWeatherContainer: React.FC = () => {
     * This function is responsible to get the api response from local if it is available
   */
   const checkWeather = async () => {
-    const { value } = await SynchPlugin.get({ key: 'Weather' });
+    const { value } = await SynchPlugin.get({ key: ConstantStrings.STR_WEATHER });
     setWeather(value != null ? JSON.parse(value) : '');
   };
 
@@ -121,7 +128,7 @@ const GetWeatherContainer: React.FC = () => {
       ApiService.get('/weather', {
         params: {
           'q': city,
-          'appid': '28181a814f0231d9cbe8720984934aef'
+          'appid': ConstantStrings.STR_APP_ID
         }
       }).then(res => {
         if (getNested(res, 'status') === 200) {
@@ -144,13 +151,13 @@ const GetWeatherContainer: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>OpenWeatherApp</IonTitle>
+          <IonTitle>{ConstantStrings.STR_APP_NAME}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonLoading
         isOpen={loading}
         onDidDismiss={() => setLoading(false)}
-        message={'Getting Location...'}
+        message={ConstantStrings.STR_GET_LOCATION}
       />
       <IonToast
         isOpen={error.showError}
@@ -168,102 +175,60 @@ const GetWeatherContainer: React.FC = () => {
         </IonCard>
 
         <IonCard>
-          <IonItem>
-            <IonLabel>Temprature</IonLabel>
-          </IonItem>
+          <ItemTitle title={ConstantStrings.STR_TEMPRATURE}></ItemTitle>
           <IonCardContent>
 
-            <IonItem>
-              <IonIcon icon={paperPlane} slot="start" />
-              <IonCardTitle>
-                {`${getNested(weather, 'name')} - ${getNested(weather, 'sys', 'country')}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={paperPlane}
+              title={`${getNested(weather, 'name')} - ${getNested(weather, 'sys', 'country')}`}></ItemIconTitle>
 
-            <IonItem>
-              <IonIcon icon={thermometerOutline} slot="start" />
-              <IonCardTitle>
-                {`${getNested(weather, 'main', 'temp')}${'\xB0F'}` || '--'}
-              </IonCardTitle>
-            </IonItem>
 
-            <IonItem>
-              <IonIcon icon={thermometerOutline} slot="start" />
-              <IonCardTitle>
-                {`Feels like : ${getNested(weather, 'main', 'feels_like')}${'\xB0F'}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={thermometerOutline}
+              title={`${getNested(weather, 'main', 'temp')}${'\xB0F'}`}></ItemIconTitle>
+
+
+            <ItemIconTitle imageSource={thermometerOutline}
+              title={`Feels like : ${getNested(weather, 'main', 'feels_like')}${'\xB0F'}`}></ItemIconTitle>
 
           </IonCardContent>
         </IonCard>
 
         <IonCard>
-          <IonItem>
-            <IonLabel>Description</IonLabel>
-          </IonItem>
+          <ItemTitle title={ConstantStrings.STR_DESCRIPTION}></ItemTitle>
           <IonCardContent>
 
-            <IonItem>
-              <IonIcon icon={cloud} slot="start" />
-              <IonCardTitle>
-                {`${getNested(weather, 'weather', '0', 'main')}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={cloud}
+              title={`${getNested(weather, 'weather', '0', 'main')}` || '--'}
+            ></ItemIconTitle>
 
-            <IonItem>
-              <IonIcon icon={cloudOutline} slot="start" />
-              <IonCardTitle>
-                {`${getNested(weather, 'weather', '0', 'description')}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={cloudOutline}
+              title={`${getNested(weather, 'weather', '0', 'description')}` || '--'}
+            ></ItemIconTitle>
 
           </IonCardContent>
         </IonCard>
 
         <IonCard>
-          <IonItem>
-            <IonLabel>Other Information</IonLabel>
-          </IonItem>
-
+          <ItemTitle title={ConstantStrings.STR_DESCRIPTION}></ItemTitle>
           <IonCardContent>
+            <ItemIconTitle imageSource={thermometerOutline}
+              title={`Min temp : ${getNested(weather, 'main', 'temp_min')}${'\xB0F'}` || '--'}
+            ></ItemIconTitle>
 
-            <IonItem>
-              <IonIcon icon={thermometerOutline} slot="start" />
-              <IonCardTitle>
-                {`Min temp : ${getNested(weather, 'main', 'temp_min')}${'\xB0F'}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={thermometerOutline}
+              title={`Max temp : ${getNested(weather, 'main', 'temp_max')}${'\xB0F'}`}
+            ></ItemIconTitle>
 
-            <IonItem>
-              <IonIcon icon={thermometerOutline} slot="start" />
-              <IonCardTitle>
-                {`Max temp : ${getNested(weather, 'main', 'temp_max')}${'\xB0F'}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={thermometerOutline}
+              title={`Pressure : ${getNested(weather, 'main', 'pressure')}`}
+            ></ItemIconTitle>
 
-            <IonItem>
-              <IonIcon icon={thermometerOutline} slot="start" />
-              <IonCardTitle>
-                {`Pressure : ${getNested(weather, 'main', 'pressure')}` || '--'}
-              </IonCardTitle>
-            </IonItem>
+            <ItemIconTitle imageSource={waterSharp}
+              title={`Humidity : ${getNested(weather, 'main', 'humidity')} %`}
+            ></ItemIconTitle>
 
-            <IonItem>
-              <IonIcon icon={waterSharp} slot="start" />
-              <IonCardTitle>
-                {`Humidity : ${getNested(weather, 'main', 'humidity')}` || '--'}
-              </IonCardTitle>
-            </IonItem>
-
-            <IonItem>
-              <IonIcon icon={speedometer} slot="start" />
-              <IonCardTitle>
-                {`Wind Speed :${getNested(weather, 'wind', 'speed')}` || '--'}
-              </IonCardTitle>
-            </IonItem>
-
-
-
+            <ItemIconTitle imageSource={speedometer}
+              title={`Wind Speed :${getNested(weather, 'wind', 'speed')}`}
+            ></ItemIconTitle>
           </IonCardContent>
         </IonCard>
       </IonContent>
