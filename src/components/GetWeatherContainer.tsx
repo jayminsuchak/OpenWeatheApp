@@ -132,16 +132,15 @@ const GetWeatherContainer: React.FC = () => {
         }
       }).then(res => {
         if (getNested(res, 'status') === 200) {
-          // setLoading(false);
-
           setWeather(res.data);
           saveWeather(JSON.stringify(res.data))
           scheduleNotification();
           addNotificationListner();
         } else {
-          setError(res.data);
+          setError({ showError: true, message: res.data })
         }
-
+      }).catch(error => {
+        setError({ showError: true, message: getNested(error, 'response', 'data', 'message') })
       })
     }
   }
