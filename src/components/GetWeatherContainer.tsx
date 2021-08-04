@@ -39,6 +39,8 @@ const GetWeatherContainer: React.FC = () => {
   const [city, setCity] = useState<string>('');
   const [weather, setWeather] = useState<object>();
   const [pendingNotificaton, setPendingNotification] = useState<number>(-1);
+  const [wifiConnected, setWifiConnected] = useState<boolean>(true);
+
 
   /**
     * This function is responsible for save the response when the api gives response.
@@ -71,6 +73,7 @@ const GetWeatherContainer: React.FC = () => {
   React.useEffect(() => {
     const isConnected = Promise.resolve(isWifiConnected());
     isConnected.then((connected) => {
+      setWifiConnected(connected)
       if (connected && pendingNotificaton === 0) {
         getLocation();
       } else {
@@ -83,6 +86,12 @@ const GetWeatherContainer: React.FC = () => {
   React.useEffect(() => {
     getWeatherInfo();
   }, [city])
+
+  React.useEffect(() => {
+    if (!wifiConnected) {
+      setError({ showError: true, message: "Wifi is not connected. Please try once wifi is available" });
+    }
+  }, [wifiConnected])
 
 
 
@@ -178,15 +187,15 @@ const GetWeatherContainer: React.FC = () => {
           <IonCardContent>
 
             <ItemIconTitle imageSource={paperPlane}
-              title={`${getNested(weather, 'name')} - ${getNested(weather, 'sys', 'country')}`}></ItemIconTitle>
+              title={`${getNested(weather, 'name')} -- ${getNested(weather, 'sys', 'country')} `}></ItemIconTitle>
 
 
             <ItemIconTitle imageSource={thermometerOutline}
-              title={`${getNested(weather, 'main', 'temp')}${'\xB0F'}`}></ItemIconTitle>
+              title={getNested(weather, 'main', 'temp') ? `${getNested(weather, 'main', 'temp')}${'\xB0F'}` : '--'}></ItemIconTitle>
 
 
             <ItemIconTitle imageSource={thermometerOutline}
-              title={`Feels like : ${getNested(weather, 'main', 'feels_like')}${'\xB0F'}`}></ItemIconTitle>
+              title={getNested(weather, 'main', 'feels_like') ? `Feels like : ${getNested(weather, 'main', 'feels_like')}${'\xB0F'}` : '--'}></ItemIconTitle>
 
           </IonCardContent>
         </IonCard>
@@ -210,23 +219,23 @@ const GetWeatherContainer: React.FC = () => {
           <ItemTitle title={ConstantStrings.STR_DESCRIPTION}></ItemTitle>
           <IonCardContent>
             <ItemIconTitle imageSource={thermometerOutline}
-              title={`Min temp : ${getNested(weather, 'main', 'temp_min')}${'\xB0F'}` || '--'}
+              title={getNested(weather, 'main', 'temp_min') ? `Min temp : ${getNested(weather, 'main', 'temp_min')}${'\xB0F'}` : 'Min temp : --'}
             ></ItemIconTitle>
 
             <ItemIconTitle imageSource={thermometerOutline}
-              title={`Max temp : ${getNested(weather, 'main', 'temp_max')}${'\xB0F'}`}
+              title={getNested(weather, 'main', 'temp_max') ? `Max temp : ${getNested(weather, 'main', 'temp_max')}${'\xB0F'}` : 'Max temp : --'}
             ></ItemIconTitle>
 
             <ItemIconTitle imageSource={thermometerOutline}
-              title={`Pressure : ${getNested(weather, 'main', 'pressure')}`}
+              title={`Pressure : ${getNested(weather, 'main', 'pressure') || '--'}`}
             ></ItemIconTitle>
 
             <ItemIconTitle imageSource={waterSharp}
-              title={`Humidity : ${getNested(weather, 'main', 'humidity')} %`}
+              title={`Humidity : ${getNested(weather, 'main', 'humidity') ? getNested(weather, 'main', 'humidity') + '%' : '--'}`}
             ></ItemIconTitle>
 
             <ItemIconTitle imageSource={speedometer}
-              title={`Wind Speed :${getNested(weather, 'wind', 'speed')}`}
+              title={`Wind Speed : ${getNested(weather, 'wind', 'speed') || '--'}`}
             ></ItemIconTitle>
           </IonCardContent>
         </IonCard>

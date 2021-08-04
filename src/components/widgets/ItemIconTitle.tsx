@@ -13,7 +13,7 @@ export const ItemIconTitle: React.FC<GetWeatheContainerProps> = ({
         <IonItem>
             <IonIcon icon={imageSource} slot="start" />
             <IonCardTitle>
-                {title || '--'}
+                {title}
             </IonCardTitle>
         </IonItem>
     )
