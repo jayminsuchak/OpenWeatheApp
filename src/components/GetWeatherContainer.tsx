@@ -103,7 +103,7 @@ const GetWeatherContainer: React.FC = () => {
     try {
       const position = await SynchPlugin.getCurrentPosition();
       NativeGeocoder.reverseGeocode(position.coords.latitude, position.coords.longitude, options)
-        .then((result: NativeGeocoderResult[]) => setCity(result[0].subAdministrativeArea))
+        .then((result: NativeGeocoderResult[]) => setCity(result[0].locality || result[0].subAdministrativeArea || result[0].countryName))
         .catch((error: any) => console.log(error));
 
       setLoading(false);
